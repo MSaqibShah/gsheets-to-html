@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>BOUNTY DATA</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+      }
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+      }
+      th {
+        background-color: #f4f4f9;
+        color: #333;
+      }
+      tbody tr:nth-child(odd) {
+        background-color: #f9f9f9;
+      }
+      tbody tr:hover {
+        background-color: #f1f1f1;
+      }
+
+      .hide {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>BOUNTY DATA</h1>
+
+    <h2 id="loading">LOADING DATA...</h2>
+    <script>
+      const loading_text = document.getElementById("loading");
+
+      const url =
+        "https://script.google.com/macros/s/AKfycbw8xM9QQEnrqTOlRlmsMhSIeNM9S5J5ose3LCw056LCF1gCYK1oC1LOx8VJIYQv_mdfPg/exec?action=rea";
+
+      fetch(url)
+        .then((response) => response.json())
+        .then((data) => {
+          loading_text.classList.add("hide");
+          const arrayData = data.data;
+          if (arrayData.length > 0) {
+            const headerRow = document.querySelector("#csvTable thead tr");
+            Object.keys(arrayData[0]).forEach((key) => {
+              const headerCell = document.createElement("th");
+              headerCell.textContent = key;
+              headerRow.appendChild(headerCell);
+            });
+
+            const tableBody = document.querySelector("#csvTable tbody");
+            arrayData.forEach((row) => {
+              const tableRow = document.createElement("tr");
+              Object.values(row).forEach((value) => {
+                const tableCell = document.createElement("td");
+                tableCell.textContent = value;
+                tableRow.appendChild(tableCell);
+              });
+              tableBody.appendChild(tableRow);
+            });
+          } else {
+            loading_text.classList.add("hide");
+            loading_text.innerText = "No bounties at this time";
+          }
+        })
+        .catch((error) => console.error("Error loading the data: ", error));
+    </script>
+    <table id="csvTable">
+      <thead>
+        <tr></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </body>
+</html>
